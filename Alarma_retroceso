@@ -1,0 +1,75 @@
+const int TRIGG=PA10;
+const int ECHO=PA8;
+const int led = PC13;
+const int led2 = PA4;
+const int led3 = PA5;
+const int led4 = PA6;
+const int zumb = PA7;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(TRIGG, OUTPUT);
+  pinMode(ECHO, INPUT);
+  pinMode(led, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+  pinMode(zumb, OUTPUT);
+}
+
+void loop() {
+  int cm = senial(TRIGG, ECHO);
+  Serial.print("Distancia: ");
+  if(cm > 40)
+  {
+    Serial.println("Retroceda");
+    digitalWrite(led, LOW);
+    digitalWrite(led4, HIGH);
+    digitalWrite(led3, LOW);
+    digitalWrite(led2, LOW);
+  }
+  else if(cm > 20){
+
+    Serial.println("Precaución");
+    digitalWrite(led, LOW);
+    digitalWrite(led2, HIGH);
+    digitalWrite(led4, LOW);
+    digitalWrite(led3, LOW);
+    delay(500);
+    digitalWrite(led, HIGH);
+    digitalWrite(led2,LOW);
+    digitalWrite(led4, LOW);
+    digitalWrite(led3, LOW);
+    delay(500);
+    
+  }else{
+
+    Serial.println("Pare");  
+    digitalWrite(led, LOW);
+    digitalWrite(led3, HIGH);
+    digitalWrite(led4, LOW);
+    digitalWrite(led2, LOW);
+    digitalWrite(zumb, HIGH);
+  }
+  Serial.println(cm);
+  delay(1000);
+  
+  
+  
+}
+
+int senial(int TRIGG, int ECHO) {
+  long duracion, dCm;
+  
+  digitalWrite(TRIGG, LOW);  
+  delayMicroseconds(2);
+  digitalWrite(TRIGG, HIGH);  
+  delayMicroseconds(10);
+  digitalWrite(TRIGG, LOW);
+  
+  duracion = pulseIn(ECHO, HIGH);  
+  
+  dCm = duracion * 10 / 292/ 2;   
+
+  return dCm;
+}
