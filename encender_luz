@@ -1,0 +1,65 @@
+const int TRIGG=PA10;
+const int ECHO=PA8;
+//const int led = PC13;
+//const int led2 = PA4;
+const int led3 = PA5;
+//const int led4 = PA6;
+//const int zumb = PA7;
+//const int zumb2 = PB0;
+ 
+void setup() {
+  Serial.begin(9600);
+  pinMode(TRIGG, OUTPUT);
+  pinMode(ECHO, INPUT);
+  pinMode(led3, OUTPUT);
+  
+}
+boolean t = false;
+int cap;
+
+void captura(){
+
+  int cm = ping(TRIGG, ECHO);
+  cap = cm;
+  activar();
+}
+
+void activar(){
+
+  digitalWrite(led3, LOW);
+  if(cap < 20 && t == false)
+  {
+    Serial.println("hola");
+    digitalWrite(led3, HIGH);
+    t = true;
+    delay(10000);
+  }
+  if(cap < 20 && t == true)
+  {
+    delay(30000);
+    digitalWrite(led3, LOW);
+    t = false;
+  }
+
+}
+void loop() {
+
+  captura();
+  
+}
+
+int ping(int TRIGG, int ECHO) {
+  long duration, distanceCm;
+  
+  digitalWrite(TRIGG, LOW);  
+  delayMicroseconds(2);
+  digitalWrite(TRIGG, HIGH);  
+  delayMicroseconds(10);
+  digitalWrite(TRIGG, LOW);
+  
+  duration = pulseIn(ECHO, HIGH);  
+  
+  distanceCm = duration * 10 / 292/ 2;   
+
+  return distanceCm;
+}
